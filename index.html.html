@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Interactivo: Algoritmo de Nómina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-section, .step, .results-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+        }
+        
+        .input-section h2 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label {
+            flex-basis: 200px;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input[type="number"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+        
+        button#resetButton {
+            background-color: #e74c3c;
+        }
+        button#resetButton:hover {
+            background-color: #c0392b;
+        }
+
+        .step {
+            display: none; /* Ocultar pasos inicialmente */
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            fill: #3498db; /* Color para los iconos SVG */
+        }
+
+        .step-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .step-explanation {
+            margin-bottom: 10px;
+            background-color: #eaf5ff;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+
+        pre {
+            background-color: #2c3e50;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .calculation-result {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #27ae60;
+            background-color: #e6f7f0;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .subsidy-info {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .subsidy-applies {
+            color: #16a085;
+            background-color: #d1f2eb;
+        }
+        .subsidy-no-applies {
+            color: #c0392b;
+            background-color: #f9e7e5;
+        }
+
+        #finalResult {
+            font-size: 1.5em;
+            text-align: center;
+            padding: 15px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 5px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1><svg class="step-icon" style="width:50px; height:50px; vertical-align: middle; margin-right:10px; fill:#2c3e50;" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-5h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5V5H8v2z"/></svg>Tutorial de Algoritmo de Nómina</h1>
+        
+        <div class="input-section">
+            <h2><svg class="step-icon" style="fill:#3498db;" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14H7v-2h3v2zm0-4H7v-2h3v2zm0-4H7V7h3v2zm4.5 8H12v-2h2.5V7H12V5h4.5c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5z"/></svg>1. Ingresa tus Datos</h2>
+            <div class="form-group">
+                <label for="salarioBasico">Salario Básico Mensual:</label>
+                <input type="number" id="salarioBasico" placeholder="Ej: 1300000" value="1300000">
+            </div>
+            <div class="form-group">
+                <label for="horasExtraDiurnas">Horas Extra Diurnas (HED):</label>
+                <input type="number" id="horasExtraDiurnas" placeholder="Ej: 10" value="0">
+            </div>
+            <div class="form-group">
+                <label for="horasExtraNocturnas">Horas Extra Nocturnas (HEN):</label>
+                <input type="number" id="horasExtraNocturnas" placeholder="Ej: 5" value="0">
+            </div>
+            <button id="calcularButton">Iniciar Tutorial y Calcular</button>
+            <button id="resetButton" class="hidden">Reiniciar Tutorial</button>
+        </div>
+
+        <!-- Paso 1: Calcular Valor Hora Ordinaria -->
+        <div id="step1" class="step">
+            <div class="step-header">
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                <span class="step-title">Paso 1: Calcular Valor Hora Ordinaria (VHO)</span>
+            </div>
+            <div class="step-explanation">
+                Para calcular cualquier recargo, primero necesitamos saber cuánto vale una hora de trabajo normal.
+                Esto se hace dividiendo el Salario Básico entre el número de horas laborables estándar en un mes (usaremos 240 horas).
+            </div>
+            <pre><code>CONSTANTE HORAS_MES = 240
+SALARIO_BASICO = [Valor ingresado]
+
+VALOR_HORA_ORDINARIA = SALARIO_BASICO / HORAS_MES</code></pre>
+            <div class="calculation-result" id="outputStep1"></div>
+        </div>
+
+        <!-- Paso 2: Calcular Pago Horas Extra Diurnas -->
+        <div id="step2" class="step">
+            <div class="step-header">
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M12 5.69l.71.71L15 4l-.71-.71L12 5.69zm6.36 6.36l.71.71L21 10l-.71-.71-1.93 1.93zm-.01 4.24l.71.71 2.12-2.12-.71-.71-2.12 2.12zM12 18.31l-.71-.71L9 20l.71.71L12 18.31zm-6.36-6.36l-.71-.71L3 14l.71.71 1.93-1.93zm.01-4.24l-.71-.71L2.88 9.88l.71.71 2.12-2.12zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg> <!-- Icono de sol/día -->
+                <span class="step-title">Paso 2: Calcular Pago Horas Extra Diurnas (HED)</span>
+            </div>
+            <div class="step-explanation">
+                Las horas extra diurnas tienen un recargo sobre el valor de la hora ordinaria.
+                Comúnmente, este recargo es del 25%.
+            </div>
+            <pre><code>CONSTANTE RECARGO_HED = 1.25 // (100% + 25%)
+HORAS_EXTRA_DIURNAS = [Valor ingresado]
+VALOR_HORA_ORDINARIA = [Resultado Paso 1]
+
+PAGO_HED = HORAS_EXTRA_DIURNAS * VALOR_HORA_ORDINARIA * RECARGO_HED</code></pre>
+            <div class="calculation-result" id="outputStep2"></div>
+        </div>
+
+        <!-- Paso 3: Calcular Pago Horas Extra Nocturnas -->
+        <div id="step3" class="step">
+            <div class="step-header">
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c0-3.03 2.47-5.5 5.5-5.5.34 0 .68.03 1.01.08C11.2 7.14 10 9.42 10 12c0 2.58 1.2 4.86 3.02 5.42-.33.05-.67.08-1.01.08-3.03 0-5.5-2.47-5.5-5.5z"/></svg> <!-- Icono de luna/noche -->
+                <span class="step-title">Paso 3: Calcular Pago Horas Extra Nocturnas (HEN)</span>
+            </div>
+            <div class="step-explanation">
+                Las horas extra nocturnas suelen tener un recargo mayor, por ejemplo, del 75% sobre el valor de la hora ordinaria.
+            </div>
+            <pre><code>CONSTANTE RECARGO_HEN = 1.75 // (100% + 75%)
+HORAS_EXTRA_NOCTURNAS = [Valor ingresado]
+VALOR_HORA_ORDINARIA = [Resultado Paso 1]
+
+PAGO_HEN = HORAS_EXTRA_NOCTURNAS * VALOR_HORA_ORDINARIA * RECARGO_HEN</code></pre>
+            <div class="calculation-result" id="outputStep3"></div>
+        </div>
+
+        <!-- Paso 4: Calcular Total Devengado Bruto -->
+        <div id="step4" class="step">
+            <div class="step-header">
+                 <svg class="step-icon" viewBox="0 0 24 24"><path d="M18 4H6C4.9 4 4 4.9 4 6v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 10h-2v2h-4v-2H8v-2h2V8h4v2h2v2z"/></svg> <!-- Icono de suma/cálculo -->
+                <span class="step-title">Paso 4: Calcular Total Devengado Bruto (TDB)</span>
+            </div>
+            <div class="step-explanation">
+                El total devengado bruto es la suma del salario básico más todos los pagos por horas extra.
+                Aún no incluye subsidios ni deducciones.
+            </div>
+            <pre><code>SALARIO_BASICO = [Valor ingresado]
+PAGO_HED = [Resultado Paso 2]
+PAGO_HEN = [Resultado Paso 3]
+
+TOTAL_DEVENGADO_BRUTO = SALARIO_BASICO + PAGO_HED + PAGO_HEN</code></pre>
+            <div class="calculation-result" id="outputStep4"></div>
+        </div>
+        
+        <!-- Paso 5: Determinar Aplicación de Subsidio -->
+        <div id="step5" class="step">
+            <div class="step-header">
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> <!-- Icono de check/pregunta -->
+                <span class="step-title">Paso 5: Determinar Aplicación de Subsidio de Transporte</span>
+            </div>
+            <div class="step-explanation">
+                Algunos países otorgan un subsidio de transporte si el salario básico (o a veces el devengado bruto sin el propio subsidio) no supera cierto umbral (ej. 2 Salarios Mínimos).
+                Para este ejemplo, usaremos un umbral de 2,600,000 y un valor de subsidio de 162,000 (valores de ejemplo para Colombia 2024, SMLV $1,300,000).
+                El subsidio se aplica si <code>SALARIO_BASICO <= UMBRAL_SUBSIDIO</code>.
+            </div>
+            <pre><code>CONSTANTE UMBRAL_SUBSIDIO = 2600000 
+CONSTANTE VALOR_SUBSIDIO_TRANSPORTE = 162000
+SALARIO_BASICO = [Valor ingresado]
+SUBSIDIO_APLICA = 0
+
+SI SALARIO_BASICO <= UMBRAL_SUBSIDIO ENTONCES
+    SUBSIDIO_APLICA = VALOR_SUBSIDIO_TRANSPORTE
+FIN SI</code></pre>
+            <div class="subsidy-info" id="outputStep5"></div>
+        </div>
+
+        <!-- Paso 6: Calcular Total Devengado Neto (antes de deducciones) -->
+        <div id="step6" class="step">
+            <div class="step-header">
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M7 15H4v2h3v-2zm0-4H4v2h3v-2zm0-4H4v2h3V7zm5 8h6v-2h-6v2zm0-4h6v-2h-6v2zm0-4h6V7h-6v2zm5 12H7c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v5.08c-.33-.05-.66-.08-1-.08s-.67.03-1 .08V5H7v14h5.08c.05.33.08.66.08 1s-.03.67-.08 1H7zm5.21-1.79c.58.58 1.35.94 2.18.94s1.6-.36 2.18-.94l2.55-2.55c.59-.58.59-1.53 0-2.12l-.71-.71a1.5 1.5 0 0 0-2.12 0L18 15.05l-1.12-1.12a1.5 1.5 0 0 0-2.12 0l-.71.71c-.58.59-.58 1.54 0 2.12l2.16 2.16zM19.5 12c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5z"/></svg> <!-- Icono de total/resultado final -->
+                <span class="step-title">Paso 6: Calcular Total Devengado Neto (Incluyendo Subsidio)</span>
+            </div>
+            <div class="step-explanation">
+                Finalmente, sumamos el subsidio (si aplica) al Total Devengado Bruto.
+                Este sería el monto antes de aplicar deducciones de ley (salud, pensión, etc.), que no cubriremos en este tutorial simplificado.
+            </div>
+            <pre><code>TOTAL_DEVENGADO_BRUTO = [Resultado Paso 4]
+SUBSIDIO_APLICA = [Resultado Paso 5]
+
+TOTAL_DEVENGADO_NETO_ANTES_DEDUCCIONES = TOTAL_DEVENGADO_BRUTO + SUBSIDIO_APLICA</code></pre>
+            <div class="calculation-result" id="outputStep6"></div>
+        </div>
+        
+        <div class="results-section hidden" id="finalResultSection">
+            <h2><svg class="step-icon" style="fill:#2ecc71;" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z"/></svg>Resultado Final del Tutorial</h2>
+            <p>Basado en los datos ingresados y los pasos del algoritmo, el cálculo de nómina (antes de deducciones) es:</p>
+            <div id="finalResult"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const salarioBasicoInput = document.getElementById('salarioBasico');
+        const horasExtraDiurnasInput = document.getElementById('horasExtraDiurnas');
+        const horasExtraNocturnasInput = document.getElementById('horasExtraNocturnas');
+        const calcularButton = document.getElementById('calcularButton');
+        const resetButton = document.getElementById('resetButton');
+
+        const steps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3'),
+            document.getElementById('step4'),
+            document.getElementById('step5'),
+            document.getElementById('step6')
+        ];
+        const outputStep1 = document.getElementById('outputStep1');
+        const outputStep2 = document.getElementById('outputStep2');
+        const outputStep3 = document.getElementById('outputStep3');
+        const outputStep4 = document.getElementById('outputStep4');
+        const outputStep5 = document.getElementById('outputStep5');
+        const outputStep6 = document.getElementById('outputStep6');
+        
+        const finalResultSection = document.getElementById('finalResultSection');
+        const finalResultDiv = document.getElementById('finalResult');
+
+        // Constantes del algoritmo (puedes ajustarlas)
+        const HORAS_MES_ESTANDAR = 240;
+        const RECARGO_HED_FACTOR = 1.25; // 25% de recargo
+        const RECARGO_HEN_FACTOR = 1.75; // 75% de recargo
+        const UMBRAL_SUBSIDIO_TRANSPORTE = 2600000; // Ej: 2 SMLV Colombia 2024
+        const VALOR_SUBSIDIO_TRANSPORTE = 162000;   // Ej: Subsidio Transporte Colombia 2024
+
+        function formatCurrency(value) {
+            return value.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function resetTutorial() {
+            steps.forEach(step => step.style.display = 'none');
+            finalResultSection.classList.add('hidden');
+            resetButton.classList.add('hidden');
+            calcularButton.textContent = 'Iniciar Tutorial y Calcular';
+            
+            // Opcional: Limpiar campos de entrada
+            // salarioBasicoInput.value = '';
+            // horasExtraDiurnasInput.value = '';
+            // horasExtraNocturnasInput.value = '';
+        }
+        
+        resetButton.addEventListener('click', resetTutorial);
+
+        calcularButton.addEventListener('click', () => {
+            // Ocultar todos los pasos y resultado final al recalcular
+            resetTutorial();
+            resetButton.classList.remove('hidden');
+            calcularButton.textContent = 'Recalcular Nómina';
+
+            // Obtener valores de entrada
+            const salarioBasico = parseFloat(salarioBasicoInput.value) || 0;
+            const horasExtraDiurnas = parseFloat(horasExtraDiurnasInput.value) || 0;
+            const horasExtraNocturnas = parseFloat(horasExtraNocturnasInput.value) || 0;
+
+            if (salarioBasico <= 0) {
+                alert("Por favor, ingresa un salario básico válido.");
+                return;
+            }
+
+            // --- Inicia el tutorial paso a paso ---
+
+            // Paso 1: Calcular Valor Hora Ordinaria
+            const valorHoraOrdinaria = salarioBasico / HORAS_MES_ESTANDAR;
+            steps[0].style.display = 'block';
+            outputStep1.innerHTML = `SALARIO_BASICO (${formatCurrency(salarioBasico)}) / HORAS_MES (${HORAS_MES_ESTANDAR}) = <strong>${formatCurrency(valorHoraOrdinaria)} por hora</strong>.`;
+            
+            // Rellenar pseudocódigo dinámicamente (ejemplo para el primer paso)
+            steps[0].querySelector('pre code').innerHTML = `CONSTANTE HORAS_MES = ${HORAS_MES_ESTANDAR}
+SALARIO_BASICO = ${formatCurrency(salarioBasico)}
+
+VALOR_HORA_ORDINARIA = ${formatCurrency(salarioBasico)} / ${HORAS_MES_ESTANDAR}`;
+
+
+            // Paso 2: Calcular Pago Horas Extra Diurnas
+            const pagoHED = horasExtraDiurnas * valorHoraOrdinaria * RECARGO_HED_FACTOR;
+            steps[1].style.display = 'block';
+            outputStep2.innerHTML = `HORAS_EXTRA_DIURNAS (${horasExtraDiurnas}) * VALOR_HORA_ORDINARIA (${formatCurrency(valorHoraOrdinaria)}) * RECARGO_HED (${RECARGO_HED_FACTOR}) = <strong>${formatCurrency(pagoHED)}</strong>.`;
+            steps[1].querySelector('pre code').innerHTML = `CONSTANTE RECARGO_HED = ${RECARGO_HED_FACTOR}
+HORAS_EXTRA_DIURNAS = ${horasExtraDiurnas}
+VALOR_HORA_ORDINARIA = ${formatCurrency(valorHoraOrdinaria)}
+
+PAGO_HED = ${horasExtraDiurnas} * ${formatCurrency(valorHoraOrdinaria)} * ${RECARGO_HED_FACTOR}`;
+
+
+            // Paso 3: Calcular Pago Horas Extra Nocturnas
+            const pagoHEN = horasExtraNocturnas * valorHoraOrdinaria * RECARGO_HEN_FACTOR;
+            steps[2].style.display = 'block';
+            outputStep3.innerHTML = `HORAS_EXTRA_NOCTURNAS (${horasExtraNocturnas}) * VALOR_HORA_ORDINARIA (${formatCurrency(valorHoraOrdinaria)}) * RECARGO_HEN (${RECARGO_HEN_FACTOR}) = <strong>${formatCurrency(pagoHEN)}</strong>.`;
+            steps[2].querySelector('pre code').innerHTML = `CONSTANTE RECARGO_HEN = ${RECARGO_HEN_FACTOR}
+HORAS_EXTRA_NOCTURNAS = ${horasExtraNocturnas}
+VALOR_HORA_ORDINARIA = ${formatCurrency(valorHoraOrdinaria)}
+
+PAGO_HEN = ${horasExtraNocturnas} * ${formatCurrency(valorHoraOrdinaria)} * ${RECARGO_HEN_FACTOR}`;
+
+            // Paso 4: Calcular Total Devengado Bruto
+            const totalDevengadoBruto = salarioBasico + pagoHED + pagoHEN;
+            steps[3].style.display = 'block';
+            outputStep4.innerHTML = `SALARIO_BASICO (${formatCurrency(salarioBasico)}) + PAGO_HED (${formatCurrency(pagoHED)}) + PAGO_HEN (${formatCurrency(pagoHEN)}) = <strong>${formatCurrency(totalDevengadoBruto)}</strong>.`;
+            steps[3].querySelector('pre code').innerHTML = `SALARIO_BASICO = ${formatCurrency(salarioBasico)}
+PAGO_HED = ${formatCurrency(pagoHED)}
+PAGO_HEN = ${formatCurrency(pagoHEN)}
+
+TOTAL_DEVENGADO_BRUTO = ${formatCurrency(salarioBasico)} + ${formatCurrency(pagoHED)} + ${formatCurrency(pagoHEN)}`;
+
+            // Paso 5: Determinar Aplicación de Subsidio
+            let subsidioTransporteAplicado = 0;
+            let mensajeSubsidio = "";
+            steps[4].style.display = 'block';
+            if (salarioBasico <= UMBRAL_SUBSIDIO_TRANSPORTE) {
+                subsidioTransporteAplicado = VALOR_SUBSIDIO_TRANSPORTE;
+                mensajeSubsidio = `Tu Salario Básico (${formatCurrency(salarioBasico)}) es menor o igual al umbral (${formatCurrency(UMBRAL_SUBSIDIO_TRANSPORTE)}). <strong class="subsidy-applies">SÍ aplicas al subsidio de transporte: ${formatCurrency(VALOR_SUBSIDIO_TRANSPORTE)}</strong>.`;
+                outputStep5.className = 'subsidy-info subsidy-applies';
+            } else {
+                mensajeSubsidio = `Tu Salario Básico (${formatCurrency(salarioBasico)}) es mayor al umbral (${formatCurrency(UMBRAL_SUBSIDIO_TRANSPORTE)}). <strong class="subsidy-no-applies">NO aplicas al subsidio de transporte.</strong>`;
+                outputStep5.className = 'subsidy-info subsidy-no-applies';
+            }
+            outputStep5.innerHTML = mensajeSubsidio;
+             steps[4].querySelector('pre code').innerHTML = `CONSTANTE UMBRAL_SUBSIDIO = ${formatCurrency(UMBRAL_SUBSIDIO_TRANSPORTE)} 
+CONSTANTE VALOR_SUBSIDIO_TRANSPORTE = ${formatCurrency(VALOR_SUBSIDIO_TRANSPORTE)}
+SALARIO_BASICO = ${formatCurrency(salarioBasico)}
+SUBSIDIO_APLICA = 0
+
+SI ${formatCurrency(salarioBasico)} <= ${formatCurrency(UMBRAL_SUBSIDIO_TRANSPORTE)} ENTONCES
+    SUBSIDIO_APLICA = ${formatCurrency(VALOR_SUBSIDIO_TRANSPORTE)}
+FIN SI
+// Resultado: SUBSIDIO_APLICA = ${formatCurrency(subsidioTransporteAplicado)}`;
+
+
+            // Paso 6: Calcular Total Devengado Neto (antes de deducciones)
+            const totalDevengadoNeto = totalDevengadoBruto + subsidioTransporteAplicado;
+            steps[5].style.display = 'block';
+            outputStep6.innerHTML = `TOTAL_DEVENGADO_BRUTO (${formatCurrency(totalDevengadoBruto)}) + SUBSIDIO_APLICA (${formatCurrency(subsidioTransporteAplicado)}) = <strong>${formatCurrency(totalDevengadoNeto)}</strong>.`;
+            steps[5].querySelector('pre code').innerHTML = `TOTAL_DEVENGADO_BRUTO = ${formatCurrency(totalDevengadoBruto)}
+SUBSIDIO_APLICA = ${formatCurrency(subsidioTransporteAplicado)}
+
+TOTAL_DEVENGADO_NETO_ANTES_DEDUCCIONES = ${formatCurrency(totalDevengadoBruto)} + ${formatCurrency(subsidioTransporteAplicado)}`;
+
+
+            // Mostrar resultado final
+            finalResultDiv.textContent = formatCurrency(totalDevengadoNeto);
+            finalResultSection.classList.remove('hidden');
+
+            // Scroll al primer paso para mejor UX
+            if (steps[0].style.display === 'block') {
+                steps[0].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        
+        // Estado inicial
+        resetTutorial();
+
+    </script>
+
+</body>
+</html>
